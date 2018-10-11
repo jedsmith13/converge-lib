@@ -114,7 +114,7 @@ Converge.prototype.collectPaymentwithoutCVV = function (firstName, lastName, ema
     });
 };
 
-Converge.prototype.generateToken = function (firstName, lastName, email, cardNumber, expirationMonth, expirationYear, cvv) {
+Converge.prototype.generateToken = function (firstName, lastName, email, cardNumber, expirationMonth, expirationYear, cvv, zip, address) {
     return new Promise((resolve, reject) => {
         //build txn node
         var xmlTransaction = '';
@@ -134,6 +134,13 @@ Converge.prototype.generateToken = function (firstName, lastName, email, cardNum
         xmlTransaction += '<ssl_first_name>' + firstName + '</ssl_first_name>\n';
         xmlTransaction += '<ssl_last_name>' + lastName + '</ssl_last_name>\n';
         xmlTransaction += '<ssl_email>' + email + '</ssl_email>\n';
+
+        // add the account verify indicator if a zip and address is included
+        if (zip && address) {
+            xmlTransaction += '<ssl_verify>Y</ssl_verify>\n';
+            xmlTransaction += '<ssl_avs_zip>' + zip + '</ssl_avs_zip>\n';
+            xmlTransaction += '<ssl_avs_address>' + address + '</ssl_avs_address>\n';
+        }
 
         xmlTransaction += '</txn>\n';
 
