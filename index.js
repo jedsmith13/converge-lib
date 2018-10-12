@@ -165,7 +165,11 @@ Converge.prototype.generateToken = function (firstName, lastName, email, cardNum
     });
 };
 
+<<<<<<< HEAD
 Converge.prototype.queryToken = function (token) {
+=======
+Converge.prototype.deleteToken = function (token) {
+>>>>>>> add-delete-token
     return new Promise((resolve, reject) => {
         //build txn node
         var xmlTransaction = '';
@@ -174,7 +178,11 @@ Converge.prototype.queryToken = function (token) {
         xmlTransaction += '<ssl_user_id>' + this.ssl_user_id + '</ssl_user_id>\n';
         xmlTransaction += '<ssl_pin>' + this.ssl_pin + '</ssl_pin>\n';
         xmlTransaction += '<ssl_test_mode>' + this.ssl_test_mode + '</ssl_test_mode>\n';
+<<<<<<< HEAD
         xmlTransaction += '<ssl_transaction_type>ccquerytoken</ssl_transaction_type>\n';
+=======
+        xmlTransaction += '<ssl_transaction_type>ccdeletetoken</ssl_transaction_type>\n';
+>>>>>>> add-delete-token
         xmlTransaction += '<ssl_token>' + token + '</ssl_token>\n';
         xmlTransaction += '<ssl_result_format>HTML</ssl_result_format>\n';
 
