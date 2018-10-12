@@ -165,11 +165,7 @@ Converge.prototype.generateToken = function (firstName, lastName, email, cardNum
     });
 };
 
-<<<<<<< HEAD
 Converge.prototype.queryToken = function (token) {
-=======
-Converge.prototype.deleteToken = function (token) {
->>>>>>> add-delete-token
     return new Promise((resolve, reject) => {
         //build txn node
         var xmlTransaction = '';
@@ -178,11 +174,43 @@ Converge.prototype.deleteToken = function (token) {
         xmlTransaction += '<ssl_user_id>' + this.ssl_user_id + '</ssl_user_id>\n';
         xmlTransaction += '<ssl_pin>' + this.ssl_pin + '</ssl_pin>\n';
         xmlTransaction += '<ssl_test_mode>' + this.ssl_test_mode + '</ssl_test_mode>\n';
-<<<<<<< HEAD
         xmlTransaction += '<ssl_transaction_type>ccquerytoken</ssl_transaction_type>\n';
-=======
+        xmlTransaction += '<ssl_token>' + token + '</ssl_token>\n';
+        xmlTransaction += '<ssl_result_format>HTML</ssl_result_format>\n';
+
+        xmlTransaction += '</txn>\n';
+
+
+        var urlToPost = this.ssl_test_mode ? testURL : productionURL;
+        request.post({
+            url: urlToPost,
+            form: xmlTransaction
+        }, function (error, response, body) {
+            if (error) {
+                return reject(error);
+            }
+            xml2js.parseString(body, function (err, results) {
+                if (err) {
+                    return reject(err);
+                }
+                //clean the arrays
+                results = cleanXML(results);
+                return resolve(results);
+            });
+        });
+    });
+};
+
+Converge.prototype.deleteToken = function (token) {
+    return new Promise((resolve, reject) => {
+        //build txn node
+        var xmlTransaction = '';
+        xmlTransaction += 'xmldata=<txn>\n';
+        xmlTransaction += '<ssl_merchant_id>' + this.ssl_merchant_id + '</ssl_merchant_id>\n';
+        xmlTransaction += '<ssl_user_id>' + this.ssl_user_id + '</ssl_user_id>\n';
+        xmlTransaction += '<ssl_pin>' + this.ssl_pin + '</ssl_pin>\n';
+        xmlTransaction += '<ssl_test_mode>' + this.ssl_test_mode + '</ssl_test_mode>\n';
         xmlTransaction += '<ssl_transaction_type>ccdeletetoken</ssl_transaction_type>\n';
->>>>>>> add-delete-token
         xmlTransaction += '<ssl_token>' + token + '</ssl_token>\n';
         xmlTransaction += '<ssl_result_format>HTML</ssl_result_format>\n';
 
