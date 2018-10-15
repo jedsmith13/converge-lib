@@ -12,13 +12,17 @@ var testURL = 'https://demo.myvirtualmerchant.com/VirtualMerchantDemo/processxml
 var productionURL = 'https://www.myvirtualmerchant.com/VirtualMerchant/processxml.do';
 
 
-function Converge(merchantId, userId, pin, testMode) {
+function Converge(merchantId, userId, pin, testMode, customUrl) {
     this.ssl_merchant_id = merchantId;
     this.ssl_user_id = userId;
     this.ssl_pin = pin;
     this.ssl_test_mode = testMode;
+    this.customUrl = customUrl;
 }
 
+Converge.prototype.getUrl = function () {
+    return this.customUrl ? this.customUrl : this.ssl_test_mode ? testURL : productionURL;
+}
 
 Converge.prototype.collectPayment = function (firstName, lastName, email, cardNumber, expirationMonth, expirationYear, cvv, amount, invoiceNumber, description) {
 
@@ -47,7 +51,7 @@ Converge.prototype.collectPayment = function (firstName, lastName, email, cardNu
     xmlTransaction += '</txn>\n';
 
 
-    var urlToPost = this.ssl_test_mode ? testURL : productionURL;
+    var urlToPost = this.getUrl();
     request.post({
         url: urlToPost,
         form: xmlTransaction
@@ -95,7 +99,7 @@ Converge.prototype.collectPaymentwithoutCVV = function (firstName, lastName, ema
     xmlTransaction += '</txn>\n';
 
 
-    var urlToPost = this.ssl_test_mode ? testURL : productionURL;
+    var urlToPost = this.getUrl();
     request.post({
         url: urlToPost,
         form: xmlTransaction
@@ -141,7 +145,7 @@ Converge.prototype.generateToken = function (firstName, lastName, email, cardNum
     xmlTransaction += '</txn>\n';
 
 
-    var urlToPost = this.ssl_test_mode ? testURL : productionURL;
+    var urlToPost = this.getUrl();
     request.post({
         url: urlToPost,
         form: xmlTransaction
@@ -182,7 +186,7 @@ Converge.prototype.collectPaymentByToken = function (token, amount, invoiceNumbe
     xmlTransaction += '<ssl_invoice_number>' + invoiceNumber + '</ssl_invoice_number>\n';
     xmlTransaction += '</txn>\n';
 
-    var urlToPost = this.ssl_test_mode ? testURL : productionURL;
+    var urlToPost = this.getUrl();
     request.post({
         url: urlToPost,
         form: xmlTransaction
@@ -221,7 +225,7 @@ Converge.prototype.verifyCard = function (cardNumber, expirationMonth, expiratio
     xmlTransaction += '<ssl_cvv2cvc2>' + cvv + '</ssl_cvv2cvc2>\n';
     xmlTransaction += '</txn>\n';
 
-    var urlToPost = this.ssl_test_mode ? testURL : productionURL;
+    var urlToPost = this.getUrl();
     request.post({
         url: urlToPost,
         form: xmlTransaction
